@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <title>BuyLocalApp</title>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+		<meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' 'self' http://www.northwestcountry.co.nz http://maps.googleapis.com https://www.facebook.com/ https://www.facebook.net/ https://connect.facebook.net https://connect.facebook.com * gap: ws: https://ssl.gstatic.com;img-src * 'self' data: content:;style-src 'self' https://fonts.googleapis.com 'unsafe-inline' data: blob:;script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/layout.css">
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+    </head>
+    <body class="bgbody">
+		<div class="app">
+			<header>
+				<div id="header-logo"><a onClick="return changeScreen('mapme')"><img src="img/logo.png"></a></div>
+				<div id="header-nav"></div>
+			</header>
+			<div class="appbody">
+				<section id="loading" class="content bgnormal">
+					<div id="loading-logo"><img src="img/logo.png"></div>
+					<div id="loading-progress"><div class="progressbar"><div class="progressbar-done"></div></div></div>
+				</section>
+				<section id="about" class="content bgfullscreen">
+					<div class="slidercontainer"><div id="about-slider" class="slider"></div><div id="about-slidecontrols" class="slidercontrols"></div></div>
+				</section>
+				<section id="promotions" class="content bgfullscreen">
+					<div class="slidercontainer"><div id="promotions-slider" class="slider"></div><div id="promotions-slidecontrols" class="slidercontrols"></div></div>
+				</section>
+				<section id="map" class="content bgfullscreen">
+					<div id="map_canvas"></div>
+					<div id="map_overlay"></div>
+				</section>
+				<section id="region" class="content bgnormal scroller"><div class="inner">
+				</div></section>
+				<section id="login" class="content bgimage"><div class="inner">
+					<h1>Login</h1>
+					<form name="form-login" method="get" action="index.html">
+						<input type="email" name="u" placeholder="E-mail address">
+						<input type="password" name="p" placeholder="Password">
+						<button class="btn btn-main" onClick="return actionLoginDo( )">Sign in</button>
+					</form>
+					<div class="buttonbar">
+						<button class="btn btn-alt" onClick="return changeScreen( 'changepassword1' )">Forgot password?</button>
+						<button class="btn btn-alt" onClick="return changeScreen( 'register' )">Register as new user</button>
+					</div>
+				</div></section>
+				<section id="loginfacebook" class="content bgimage"><div class="inner"></div></section>
+
+				<section id="changepassword1" class="content bgimage"><div class="inner">
+					<h1>Reset Password</h1>
+					<P>Enter your email address and we will email you a code to use to reset your password.</P>
+					<form name="form-reset1" method="get" action="index.html">
+						<input type="email" name="u" placeholder="E-mail address">
+						<button class="btn btn-main" onClick="return actionChangePassword1Do( )">Reset Password</button>
+					</form>
+				</div></section>
+				<section id="changepassword2" class="content bgimage"><div class="inner">
+					<h1>New Password</h1>
+					<P>Enter the code you were emailed along with a new password and it will be reset for you.</P>
+					<form name="form-reset2" method="get" action="index.html">
+						<input type="email" name="u" placeholder="E-mail address">
+						<input type="text" name="c" placeholder="Verification code">
+						<input type="password" name="p" placeholder="New password">
+						<button class="btn btn-main" onClick="return actionChangePassword2Do( )">Reset Password</button>
+					</form>
+				</div></section>
+
+				<section id="register" class="content bgimage"><div class="inner">
+					<h1>Register</h1>
+					<form name="form-register" method="get" action="index.html">
+						<input type="email" name="u" placeholder="E-mail address">
+						<input type="password" name="p" placeholder="Password">
+						<button class="btn btn-main" onClick="return actionRegisterDo( )">Create Account</button>
+					</form>
+				</div></section>
+				<section id="welcomenewuser" class="content bgnormal scroller"><div class="inner"></div></section>
+				<section id="profile" class="content bgnormal scroller"><div class="inner"></div></section>
+				<section id="scanfailed" class="content bgnormal scroller"><div class="inner">
+					<h2>Whoops</h2>
+					<P>Sorry but the scan of the QR code has not worked.</P>
+					<button class="btn btn-main" onClick="return actionScan( )">Try again</button>
+					<button class="btn btn-main" onClick="return actionMap( )">Back to map</button>
+				</div></section>
+				<section id="scansuccess" class="content bgnormal scroller"><div class="inner"></div></section>
+			</div>
+			<div id="fb-root"></div>
+			<footer>
+				<div id="footer-nav"></div>
+			</footer>
+		</div>
+		<div id="pleasewait" class="wholedevice"><img src="img/loading.gif" /></div>
+		<script type="text/javascript">
+			if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/)) {
+				var line = '<script type="text/javascript" src="cordova.js"' + '></'+'script>';
+				document.writeln(line);
+			}
+		</script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/swipeview.js"></script>
+		<script type="application/javascript" src="js/iscroll.js"></script>
+		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDyhbuNOW4XOHlN45CTahJqMCDar9s3j8&callback=actionMapInit"></script>
+		<script type="text/javascript" src="js/jquery.md5.js"></script>
+		<script type="text/javascript" src="js/custom.js"></script>
+		<script type="text/javascript" src="js/lib.js"></script>
+    </body>
+</html>
