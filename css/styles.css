@@ -5,6 +5,9 @@
 		  - 0, 146, 146
 */
 /* ------------------- MEDIA SIZES ------------------ */
+* {
+/*	border: 1px dashed red; */
+}
 body {font-size: 17px; }
 @media only screen and (min-width : 350px ) { body {font-size: 22px; } }
 
@@ -111,7 +114,7 @@ header {
 	left: 0px;
 }
 #swipeview-slider span {
-	padding: 10px;
+	padding: 10px 0px;
 }
 .bgnormal .inner {
 	padding-left: 10px;
@@ -344,9 +347,6 @@ footer {
 	text-align:center;
 	width: 100%;
 }
-#swipeview-slider span img {
-	width: 100%;
-}
 .slidercontrols {
 	width: 100%;
 	position: absolute;
@@ -456,8 +456,8 @@ footer {
 	padding-right: 0.5em;
 }
 #swipeview-slider span img {
-	width: auto;
-	height: 250px;
+	width: 90%;
+	height: auto;
 	margin: 0 auto;
 }
 .btn, form input {
@@ -514,10 +514,6 @@ footer {
 	#footer-menuleft a.navlink i,
 	#footer-menuright a.navlink span {
 		padding-left: 0.5em;
-	}
-	#swipeview-slider span img {
-		width: 100%;
-		height: auto;
 	}
 	#map_overlay {
 		top: 60px;

@@ -1,9 +1,9 @@
 /* running modes */
 var onlinemode=false;
 var show_about_onstart=false;
-var show_promotions_onstart=false;
+var show_promotions_onstart=true;
 var show_qr_code=true;
-var force_load_all=true;
+var force_load_all=false;
 var maps_loaded=false;
 var starting_up=true;
 
@@ -163,7 +163,7 @@ function actionLoadingInfo( ){
 					localStorage.setItem( 'version_promotions', '' );
 				}
 				db_init( );
-				if( localStorage.getItem( 'version_promotions' ) == '' ) show_about_onstart=true;
+				// if( localStorage.getItem( 'version_promotions' ) == '' ) show_about_onstart=true;
 				setTimeout( actionLoadingPromotions1, loading_timegap );
 			}
 		}
@@ -196,7 +196,7 @@ function actionLoadingPromotions2( ){
 			promotions=this.responseText.split( ajax_split_row );
 			for(i=1;i<promotions.length;i++){
 				var row=promotions[i].split( ajax_split_col );
-appLog( 'id='+row[0]+' url='+row[1] );
+// appLog( 'id='+row[0]+' url='+row[1] );
 				db_exec( 'INSERT INTO promotion VALUES( ?,?,? )', [row[0],row[1],row[2] ] );
 			}
 			setTimeout( actionLoadingPromotions3, loading_timegap );
