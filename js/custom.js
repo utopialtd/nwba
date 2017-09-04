@@ -546,7 +546,7 @@ function actionMapMarkers( ){
 				google.maps.event.addListener(map_markers[k], 'click', function(){
 					actionMapMarkersInfoOpen( this.url );
                 });
-				j++;
+				k=k+1;
 			}
 		}
 	});
@@ -803,7 +803,7 @@ function actionProfile( ){
 function actionWelcomeNewUser( ){
 	html='<h1>Welcome</h1><P>The currently logged in user is '+localStorage.getItem( 'u' )+'. If you are a winner for any prizes you will be notified on this email address.</P>';
 	html=html+'<h2>Your points</h2><h3>'+localStorage.getItem( 'points' )+'</h3><p>These points will give you entry into our prize draws. They will be reset to zero after each draw.</p>';
-	$('#profile .inner').html(html);
+	$('#welcomenewuser .inner').html(html);
 	showScreen( 'welcomenewuser' );
 }
 
