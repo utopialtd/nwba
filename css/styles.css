@@ -116,6 +116,7 @@ header {
 #swipeview-slider span {
 	padding: 10px 0px;
 }
+.slidercontainer.inner,
 .bgnormal .inner {
 	padding-left: 10px;
 	padding-right: 10px;
@@ -149,13 +150,13 @@ header {
 	margin: 0px;
 	text-align:center;
 }
-body.ios7 header {
+body.iphone header {
 	padding-top: 20px;
 }
-body.ios7 .content {
+body.iphone .content {
 	top: 70px;
 }
-body.ios7 #topnav {
+body.iphone #topnav {
 	top: 70px;
 }
 
@@ -240,7 +241,6 @@ header {
 }
 */
 .scroller inner {
-border: 2px solid red;
 	padding-bottom: 200px;
 }
 .bgnormal .inner img {
@@ -323,6 +323,12 @@ footer {
 #loading-progress .progressbar .progressbar-done {
 	background-color: #eeae1f;
 	width: 0px;
+}
+#loading-version {
+	text-align:center;
+	color: white;
+	font-size: 0.8em;
+	margin-top: 2em;
 }
 /* ----------------------------- SLIDERS --------------------- */
 .slidercontainer {

@@ -68,7 +68,13 @@ function changeScreen( screen_div ){
 	}
 	return false;
 }
-
+function afterAbout( ){
+	if( show_promotions_onstart && promotions.length > 0 ){
+		actionPromotions( );
+	} else {
+		actionMap( );
+	}
+}
 /* ------------- database --------------- */
 var db;
 var db_file='buylocal.db';
@@ -377,7 +383,7 @@ function actionLoadingEnd( ){
 		header_visible=true;
 		$('header').show();
 		$('footer').show();
-		if( show_promotions_onstart ){
+		if( show_promotions_onstart && promotions.length > 0 ){
 			actionPromotions( );
 		} else {
 			actionMap( );
@@ -420,7 +426,9 @@ function redrawHeader( ){
 	j=0;
 	menu_items[j++]=[ 'Map', 'mapme' ];
 	menu_items[j++]=[ 'About '+current_region_name, 'region' ];
-	menu_items[j++]=[ 'Promotions', 'promotions' ];
+	if( promotions.length > 0 ){
+		menu_items[j++]=[ 'Promotions', 'promotions' ];
+	}
 	if( logged_in ){
 		if( show_qr_code ) {
 			menu_items[j++]=[ 'Scan QR code', 'scan' ];

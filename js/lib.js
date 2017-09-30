@@ -116,11 +116,9 @@ if( window.cordova ){
 	if( shutting_down == false ){
 		// if( !window.cordova ) $('*').css('border','1px dashed #ff0000');
 		// $('*').css('border','1px dashed #ff0000');
-		var iOS7 = window.device 
-			&& window.device.platform 
-			&& window.device.platform.toLowerCase() == "ios"
-			&& parseFloat(window.device.version) >= 7.0;
-		if( iOS7 ) $('body').addClass( 'ios7' );
+		if( navigator.userAgent.match(/(iPhone)/) ){
+			$('body').addClass( 'iphone' );
+		}
 		scrolling_divs = new Array();
 		$('.scroller').each(function(){
 			id = $(this).attr('id');
