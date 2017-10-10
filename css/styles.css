@@ -176,6 +176,10 @@ header, footer {
 .nav li {
 	color: white;
 }
+.nav li a, .nav li a:hover {
+	color: white;
+	text-decoration:none;
+}
 a.navlink {
 	color: white;
 	text-decoration:none;
@@ -340,6 +344,15 @@ footer {
 	height: 100%;
 	top: 0;
 	overflow: hidden;
+}
+.slider .promoclose {
+	background-image: url( '../img/close.png' );
+	background-repeat:none;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 40px;
+	height: 40px;
 }
 #swipeview-slider > div {
 	position:relative;

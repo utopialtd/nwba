@@ -3,12 +3,20 @@ var onlinemode=false;
 var show_about_onstart=false;
 var show_promotions_onstart=true;
 var show_qr_code=true;
-var force_load_all=false;
+var force_load_all=true;
 var maps_loaded=false;
 var starting_up=true;
 
+// Force init
+//localStorage.clear();
+//localStorage.setItem('region','');
+
+
 /* app instance */
 var api_base_url='http://www.northwestcountry.co.nz/buylocal/appapi/index.php?';
+var app_terms='http://www.northwestcountry.co.nz/nwapprules';
+var app_map_center = {lat: -36.7768944, lng: 174.558682};
+
 var api_url='';
 var management_guid='105ec886-b0ba-4edd-b1cf-2d703b5e24c0';
 var app_name='Buy Local Northwest';
@@ -150,6 +158,7 @@ function actionLoadingAbout( ){
 function actionLoadingInfo( ){
 	actionLoadingShow( 20 );
 	appLog( 'actionLoadingInfo' );
+	if( localStorage.getItem( 'version_promotions' ) == null ) show_about_onstart=true;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -169,7 +178,6 @@ function actionLoadingInfo( ){
 					localStorage.setItem( 'version_promotions', '' );
 				}
 				db_init( );
-				// if( localStorage.getItem( 'version_promotions' ) == '' ) show_about_onstart=true;
 				setTimeout( actionLoadingPromotions1, loading_timegap );
 			}
 		}
@@ -202,7 +210,6 @@ function actionLoadingPromotions2( ){
 			promotions=this.responseText.split( ajax_split_row );
 			for(i=1;i<promotions.length;i++){
 				var row=promotions[i].split( ajax_split_col );
-// appLog( 'id='+row[0]+' url='+row[1] );
 				db_exec( 'INSERT INTO promotion VALUES( ?,?,? )', [row[0],row[1],row[2] ] );
 			}
 			setTimeout( actionLoadingPromotions3, loading_timegap );
@@ -329,17 +336,19 @@ function actionLoadingRegions2( ){
 	appLog( 'actionLoadingRegions2' );
 	db_select( 'SELECT * FROM region', new Array(), function(rs){
 		regions=new Array();
-		var current_region = localStorage.getItem('region');
-		var current_region_name = localStorage.getItem('region_name');
+//		var current_region = localStorage.getItem('region');
+//		var current_region_name = localStorage.getItem('region_name');
 		for(i=0;i<rs.length;i++){
+/*
 			if( current_region == null ){
 				current_region=rs[i].guid;
 				current_region_name=rs[i].name;
 			}
+*/			
 			regions[i]=rs[i];
 		}
-		localStorage.setItem( 'region', current_region );
-		localStorage.setItem( 'region_name', current_region_name );
+//		localStorage.setItem( 'region', current_region );
+//		localStorage.setItem( 'region_name', current_region_name );
 		setTimeout( actionLoadingLogin, loading_timegap );
 	});
 }
@@ -349,7 +358,7 @@ function actionLoadingLogin( ){
 	appLog( 'actionLoadingEnd1' );
 	var u=localStorage.getItem( 'u' );
 	var p=localStorage.getItem( 'p' );
-	if( u == '' ){
+	if( u == '' || u == null ){
 		// No login
 		logged_in=false;
 		setTimeout( actionLoadingEnd, loading_timegap );
@@ -425,10 +434,8 @@ function redrawHeader( ){
 	menu_items=new Array();
 	j=0;
 	menu_items[j++]=[ 'Map', 'mapme' ];
-	menu_items[j++]=[ 'About '+current_region_name, 'region' ];
-	if( promotions.length > 0 ){
-		menu_items[j++]=[ 'Promotions', 'promotions' ];
-	}
+	if( current_region_name != '' ) menu_items[j++]=[ 'About '+current_region_name, 'region' ];
+	if( promotions.length > 0 )	menu_items[j++]=[ 'Promotions', 'promotions' ];
 	if( logged_in ){
 		if( show_qr_code ) {
 			menu_items[j++]=[ 'Scan QR code', 'scan' ];
@@ -438,10 +445,15 @@ function redrawHeader( ){
 	} else {
 		menu_items[j++]=[ 'Login / Register', 'login' ];
 	}
+	menu_items[j++]=[ 'Terms and conditions', app_terms ];
 	menu_items[j++]=[ 'About', 'about' ];
 	arrayLength = menu_items.length;
 	for (var i = 0; i < arrayLength; i++) {
-		html=html+'<li><a onClick="return changeScreen(\''+menu_items[i][1]+'\')">'+menu_items[i][0]+'</a></li>';
+		if( menu_items[i][1].substring(0,4) == 'http' ){
+			html=html+'<li><a onClick="return openExternalLink(\''+menu_items[i][1]+'\')">'+menu_items[i][0]+'</a></li>';
+		} else {
+			html=html+'<li><a onClick="return changeScreen(\''+menu_items[i][1]+'\')">'+menu_items[i][0]+'</a></li>';
+		}
 	}
 	html=html+'</ul>';
 	$('#header-nav').html(html);
@@ -468,6 +480,9 @@ function actionFooterCategory( i ){
 function redrawFooter( ){
 	var current_region = localStorage.getItem('region');
 	var current_region_name = localStorage.getItem('region_name');
+	if( current_region == '' ){
+		current_region_name="All";
+	}
 	html='<div id="footer-menuleft">';
 	html=html+'<a class="navlink" id="topnav_link" onClick="return internalToggleNav( \'regionnav\' )"><span>'+current_region_name+'</span><i class="fa fa-angle-up"></i></a>';
 	html=html+'<ul id="regionnav" class="nav">';
@@ -522,11 +537,21 @@ function actionMapMarkers( ){
 	var current_region = localStorage.getItem('region');
 	var current_category = localStorage.getItem('category');
 	if( current_category == 'all' ){
-		where='region_guid=?';
-		bind=[current_region];
+		if( current_region == '' ){
+			where='region_guid <> ?';
+			bind=[''];
+		} else {
+			where='region_guid=?';
+			bind=[current_region];
+		}
 	} else {
-		where='region_guid=? and category_guid=?';
-		bind=[current_region,current_category];
+		if( current_region == '' ){
+			where='category_guid=?';
+			bind=[current_category];
+		} else {
+			where='region_guid=? and category_guid=?';
+			bind=[current_region,current_category];
+		}
 	}
 	for(i=0;i<map_markers.length;i++){
 		map_markers[i].setMap(null);
@@ -599,18 +624,22 @@ function actionMapDraw(  ){
 	appLog( 'actionMapDraw' );
 	actionMapMarkersInfoClose( );
 	showScreen( 'map' );
-	var center = {lat: -75.363, lng: 181.044};
+	var center = app_map_center;
+	var zoom = 10;
 	var current_region = localStorage.getItem('region');
-	for(i=0;i<regions.length;i++){
-		if( current_region == regions[i].guid ){
-			longlat=regions[i].longlat.split( ',' );
-			center = {lat: parseFloat(longlat[0]), lng: parseFloat(longlat[1])};
-			break;
+	if( current_region != '' ){
+		zoom = 12;
+		for(i=0;i<regions.length;i++){
+			if( current_region == regions[i].guid ){
+				longlat=regions[i].longlat.split( ',' );
+				center = {lat: parseFloat(longlat[0]), lng: parseFloat(longlat[1])};
+				break;
+			}
 		}
 	}
 	if( map == null ){
 		map = new google.maps.Map(document.getElementById('map_canvas'), {
-			zoom: 12,
+			zoom: zoom,
 			center: center,
 			disableDefaultUI: true
 		});
@@ -627,7 +656,10 @@ function actionMapDraw(  ){
 	}
 
 	actionMapMarkers();
-	if( on_geolocation_centertome == false ) map.panTo(center);
+	if( on_geolocation_centertome == false ){
+		map.panTo(center);
+		map.setZoom( zoom );
+	}
 }
 
 function actionMapDeinit(){
@@ -675,7 +707,7 @@ function actionLoginNow( u, p, points, show_next ){
 	appLog( 'actionLoginNow '+u );
 	localStorage.setItem( 'u', u );
 	localStorage.setItem( 'p', p );
-	localStorage.setItem( 'points', points );
+	if( points != '' ) localStorage.setItem( 'points', points );
 	logged_in=true;
 	if( show_next != '' ){
 		redrawHeader( );
@@ -796,7 +828,7 @@ function actionChangePassword2Do( ){
 		if( row[0] != '' ){
 			simpleAlert( 'Whoops', row[0] );
 		} else {
-			actionLoginNow( u,p,'welcomenewuser' );
+			actionLoginNow( u,p,'','welcomenewuser' );
 		}
 	});
 	return false;
@@ -809,8 +841,8 @@ function actionProfile( ){
 	showScreen( 'profile' );
 }
 function actionWelcomeNewUser( ){
-	html='<h1>Welcome</h1><P>The currently logged in user is '+localStorage.getItem( 'u' )+'. If you are a winner for any prizes you will be notified on this email address.</P>';
-	html=html+'<h2>Your points</h2><h3>'+localStorage.getItem( 'points' )+'</h3><p>These points will give you entry into our prize draws. They will be reset to zero after each draw.</p>';
+	html='<h1>Welcome</h1><P>Thank you for signing up to Buy Local. </P>';
+	html=html+'<h2>Your starting points</h2><h3>'+localStorage.getItem( 'points' )+'</h3><p>These points will give you entry into our prize draws. They will be reset to zero after each draw.</p>';
 	$('#welcomenewuser .inner').html(html);
 	showScreen( 'welcomenewuser' );
 }
@@ -920,25 +952,31 @@ function actionAbout( ){
 
 /* ------------- promotions --------------- */
 function makePromotion( promotion ){
+	var html='<div class="promoclose" onClick="actionMap()"></div>';
 	if( promotion.url == none ){
-		var html='<img src="'+promotion.image+'">';
+		html=html+'<img src="'+promotion.image+'">';
 	} else {
-		var html='<a href="'+promotion.url+'"><img src="'+promotion.image+'"></a>';
+		html=html+'<a href="'+promotion.url+'"><img src="'+promotion.image+'"></a>';
 	}
 	return html;
 }
 function actionPromotions( ){
 	showScreen( 'promotions' );
 	if( promotions_carousel == null ){
-		html='<ul>';
-		for(i=0;i<promotion_slides.length;i++){
-			html=html+'<li';
-			if( i == 0 ) html=html+' class="active"';
-			html=html+' onclick="promotions_carousel.goToPage('+i+')"></li>';
+		html=''
+		if( promotion_slides.length > 1 ){
+			html='<ul>';
+			for(i=0;i<promotion_slides.length;i++){
+				html=html+'<li';
+				if( i == 0 ) html=html+' class="active"';
+				html=html+' onclick="promotions_carousel.goToPage('+i+')"></li>';
+			}
+			html=html+'</ul>';
 		}
-		html=html+'</ul>';
 		$('#promotions-slidecontrols').html(html);
-		document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);	
+		if( promotion_slides.length > 1 ){
+			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+		}
 		promotions_carousel = new SwipeView('#promotions-slider', {
 			numberOfPages: promotion_slides.length,
 			hastyPageFlip: true
@@ -951,20 +989,22 @@ function actionPromotions( ){
 			}
 			promotions_carousel.masterPages[i].appendChild(el)
 		}	
-		promotions_carousel.onFlip(function () {
-			var el,
-				upcoming,
-				i;
-			for (i=0; i<3; i++) {
-				upcoming = promotions_carousel.masterPages[i].dataset.upcomingPageIndex;
-				if (upcoming != promotions_carousel.masterPages[i].dataset.pageIndex) {
-					el = promotions_carousel.masterPages[i].querySelector('span');
-					el.innerHTML = makePromotion( promotion_slides[upcoming] );
+		if( promotion_slides.length > 1 ){
+			promotions_carousel.onFlip(function () {
+				var el,
+					upcoming,
+					i;
+				for (i=0; i<3; i++) {
+					upcoming = promotions_carousel.masterPages[i].dataset.upcomingPageIndex;
+					if (upcoming != promotions_carousel.masterPages[i].dataset.pageIndex) {
+						el = promotions_carousel.masterPages[i].querySelector('span');
+						el.innerHTML = makePromotion( promotion_slides[upcoming] );
+					}
 				}
-			}
-			$( '#promotions-slidecontrols ul li' ).removeClass('active');
-			$( '#promotions-slidecontrols ul li:nth-child('+(promotions_carousel.pageIndex+1)+')' ).addClass('active');
-		});
+				$( '#promotions-slidecontrols ul li' ).removeClass('active');
+				$( '#promotions-slidecontrols ul li:nth-child('+(promotions_carousel.pageIndex+1)+')' ).addClass('active');
+			});
+		}
 	} else {
 		promotions_carousel.goToPage(0);
 	}
