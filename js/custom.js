@@ -689,7 +689,7 @@ function actionRegion( ){
 	html='';
 	for(i=0;i<regions.length;i++){
 		if( current_region == regions[i].guid ){
-			html='<h2>'+regions[i].name+'</h2><img src="'+regions[i].image_url+'"><br><p>'+regions[i].description+'</P><button class="btn btn-main" onClick="return changeScreen( \'map\' )">View Map</button>';
+			html='<h2>'+regions[i].name+'</h2><img src="'+regions[i].image_url+'"><br><p>'+regions[i].description+'</P><button class="btn btn-main" onClick="return changeScreen( \'map\' )">View Map</button><BR> <BR> <BR> <BR> <BR> <BR>';
 		}
 	}
 	$('#region .inner').html(html);
