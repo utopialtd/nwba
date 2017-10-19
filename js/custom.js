@@ -58,6 +58,7 @@ function changeScreen( screen_div ){
 	switch( screen_div ){
 		case '':					actionLoading( ); break;
 		case 'about':				actionAbout( ); break;
+		case 'tandc':				actionTandc( ); break;
 		case 'promotions':			actionPromotions( ); break;
 		case 'map':					actionMap( ); break;
 		case 'mapme':				actionMapMe( ); break;
@@ -445,7 +446,7 @@ function redrawHeader( ){
 	} else {
 		menu_items[j++]=[ 'Login / Register', 'login' ];
 	}
-	menu_items[j++]=[ 'Terms and conditions', app_terms ];
+	menu_items[j++]=[ 'Terms and conditions', 'tandc' ];
 	menu_items[j++]=[ 'About', 'about' ];
 	arrayLength = menu_items.length;
 	for (var i = 0; i < arrayLength; i++) {
@@ -511,7 +512,11 @@ function redrawFooter( ){
 function actionAbout( ){
 	showScreen( 'about' );
 }
-
+/* ------------- terms --------------- */
+function actionTandc( ){
+	showScreen( 'tandc' );
+	scrollContentToTop( 'tandc' );
+}
 /* ------------- map --------------- */
 function actionMapSuccess(position) {
 	var longlat = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);

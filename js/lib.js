@@ -119,11 +119,13 @@ if( window.cordova ){
 		if( navigator.userAgent.match(/(iPhone)/) ){
 			$('body').addClass( 'iphone' );
 		}
+/*
 		scrolling_divs = new Array();
 		$('.scroller').each(function(){
 			id = $(this).attr('id');
 			scrolling_divs.push(new iScroll(id, { hScrollbar: false, vScrollbar: true } ) );
 		});
+*/
 		hideWait( );
 		changeScreen( '' );
 	}
