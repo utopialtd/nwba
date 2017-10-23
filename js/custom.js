@@ -435,7 +435,7 @@ function redrawHeader( ){
 	menu_items=new Array();
 	j=0;
 	menu_items[j++]=[ 'Map', 'mapme' ];
-	if( current_region_name != '' ) menu_items[j++]=[ 'About '+current_region_name, 'region' ];
+	if( current_region_name != null ) menu_items[j++]=[ 'About '+current_region_name, 'region' ];
 	if( promotions.length > 0 )	menu_items[j++]=[ 'Promotions', 'promotions' ];
 	if( logged_in ){
 		if( show_qr_code ) {
@@ -481,9 +481,7 @@ function actionFooterCategory( i ){
 function redrawFooter( ){
 	var current_region = localStorage.getItem('region');
 	var current_region_name = localStorage.getItem('region_name');
-	if( current_region == '' ){
-		current_region_name="All";
-	}
+	if( current_region == null ) current_region_name="All";
 	html='<div id="footer-menuleft">';
 	html=html+'<a class="navlink" id="topnav_link" onClick="return internalToggleNav( \'regionnav\' )"><span>'+current_region_name+'</span><i class="fa fa-angle-up"></i></a>';
 	html=html+'<ul id="regionnav" class="nav">';

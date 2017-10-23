@@ -116,7 +116,7 @@ if( window.cordova ){
 	if( shutting_down == false ){
 		// if( !window.cordova ) $('*').css('border','1px dashed #ff0000');
 		// $('*').css('border','1px dashed #ff0000');
-		if( navigator.userAgent.match(/(iPhone)/) ){
+		if( navigator.userAgent.match(/(iPhone)|(iPad)/) ){
 			$('body').addClass( 'iphone' );
 		}
 /*

@@ -166,6 +166,14 @@ header, footer {
 	z-index: 10;
 	background-color: #009292;
 }
+header {
+	position: fixed;
+	top: 0px;
+}
+footer {
+	position: fixed;
+	bottom: 30px;
+}
 .nav {
 	list-style-type:none;
 	margin: 0px;
@@ -227,8 +235,9 @@ header {
 
 /* ------------------- SCROLLING ------------------ */
 .scroller {
-	overflow: scroll;
-	-webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 }
 /*
 .bgnormal .scroller {
@@ -311,7 +320,7 @@ footer {
 
 /* ------------------- LOADING ------------------------------ */
 #loading-logo {
-	margin: 40% auto 0 auto;
+	margin: 30% auto 0 auto;
 	width: 200px;
 	text-align:center;
 }
