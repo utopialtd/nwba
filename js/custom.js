@@ -78,7 +78,7 @@ function changeScreen( screen_div ){
 	return false;
 }
 function afterAbout( ){
-	if( show_promotions_onstart && promotions.length > 0 ){
+	if( show_promotions_onstart && promotion_slides.length > 0 ){
 		actionPromotions( );
 	} else {
 		actionMap( );
@@ -393,7 +393,7 @@ function actionLoadingEnd( ){
 		header_visible=true;
 		$('header').show();
 		$('footer').show();
-		if( show_promotions_onstart && promotions.length > 0 ){
+		if( show_promotions_onstart && promotion_slides.length > 0 ){
 			actionPromotions( );
 		} else {
 			actionMap( );
@@ -436,7 +436,7 @@ function redrawHeader( ){
 	j=0;
 	menu_items[j++]=[ 'Map', 'mapme' ];
 	if( current_region_name != null ) menu_items[j++]=[ 'About '+current_region_name, 'region' ];
-	if( promotions.length > 0 )	menu_items[j++]=[ 'Promotions', 'promotions' ];
+	if( promotion_slides.length > 0 )	menu_items[j++]=[ 'Promotions', 'promotions' ];
 	if( logged_in ){
 		if( show_qr_code ) {
 			menu_items[j++]=[ 'Scan QR code', 'scan' ];

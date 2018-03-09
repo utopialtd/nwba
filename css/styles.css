@@ -61,7 +61,7 @@ body {font-size: 17px; }
 	padding-left: 15px;
 }
 .nav li a {
-	font-size: 1.2em;
+	font-size: 1em;
 	line-height: 1.1em;
 }
 .btn,
@@ -235,8 +235,11 @@ header {
 
 /* ------------------- SCROLLING ------------------ */
 .scroller {
+/*
     overflow-x: hidden;
     overflow-y: scroll;
+*/
+	overflow: auto;
     -webkit-overflow-scrolling: touch;
 }
 /*
