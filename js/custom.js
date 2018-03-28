@@ -956,10 +956,23 @@ function actionAbout( ){
 /* ------------- promotions --------------- */
 function makePromotion( promotion ){
 	var html='<div class="promoclose" onClick="actionMap()"></div>';
-	if( promotion.url == none ){
-		html=html+'<img src="'+promotion.image+'">';
+	if( promotion_slides.length == 1 ){
+		/* just one slide */
+		html=html+'<center>';
+		style=' style="border: 1px dashed red; width: 80%;"';
+		if( promotion.url == none ){
+			html=html+'<img src="'+promotion.image+'"'+style+'>';
+		} else {
+			html=html+'<a href="'+promotion.url+'"><img src="'+promotion.image+'"'+style+'></a>';
+		}
+		html=html+'</center>';
 	} else {
-		html=html+'<a href="'+promotion.url+'"><img src="'+promotion.image+'"></a>';
+		/* more than one */
+		if( promotion.url == none ){
+			html=html+'<img src="'+promotion.image+'">';
+		} else {
+			html=html+'<a href="'+promotion.url+'"><img src="'+promotion.image+'"></a>';
+		}
 	}
 	return html;
 }
@@ -967,7 +980,14 @@ function actionPromotions( ){
 	showScreen( 'promotions' );
 	if( promotions_carousel == null ){
 		html=''
-		if( promotion_slides.length > 1 ){
+		if( promotion_slides.length == 1 ){
+			/* just one slide */
+			html = makePromotion( promotion_slides[0] );
+			html='<span>'+html+'<span>';
+			$('#promotions-slider').html(html);
+			
+		} else if( promotion_slides.length > 1 ){
+			/* more than one */
 			html='<ul>';
 			for(i=0;i<promotion_slides.length;i++){
 				html=html+'<li';
@@ -975,40 +995,41 @@ function actionPromotions( ){
 				html=html+' onclick="promotions_carousel.goToPage('+i+')"></li>';
 			}
 			html=html+'</ul>';
-		}
-		$('#promotions-slidecontrols').html(html);
-		if( promotion_slides.length > 1 ){
-			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-		}
-		promotions_carousel = new SwipeView('#promotions-slider', {
-			numberOfPages: promotion_slides.length,
-			hastyPageFlip: true
-		});
-		for (i=0; i<3; i++) {
-			page = i==0 ? promotion_slides.length-1 : i-1;
-			el = document.createElement('span');
-			if( promotion_slides[page] ){
-				el.innerHTML = makePromotion( promotion_slides[page] );
+
+			$('#promotions-slidecontrols').html(html);
+			if( promotion_slides.length > 1 ){
+				document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 			}
-			promotions_carousel.masterPages[i].appendChild(el)
-		}	
-		if( promotion_slides.length > 1 ){
-			promotions_carousel.onFlip(function () {
-				var el,
-					upcoming,
-					i;
-				for (i=0; i<3; i++) {
-					upcoming = promotions_carousel.masterPages[i].dataset.upcomingPageIndex;
-					if (upcoming != promotions_carousel.masterPages[i].dataset.pageIndex) {
-						el = promotions_carousel.masterPages[i].querySelector('span');
-						el.innerHTML = makePromotion( promotion_slides[upcoming] );
-					}
-				}
-				$( '#promotions-slidecontrols ul li' ).removeClass('active');
-				$( '#promotions-slidecontrols ul li:nth-child('+(promotions_carousel.pageIndex+1)+')' ).addClass('active');
+			promotions_carousel = new SwipeView('#promotions-slider', {
+				numberOfPages: promotion_slides.length,
+				hastyPageFlip: true
 			});
+			for (i=0; i<3; i++) {
+				page = i==0 ? promotion_slides.length-1 : i-1;
+				el = document.createElement('span');
+				if( promotion_slides[page] ){
+					el.innerHTML = makePromotion( promotion_slides[page] );
+				}
+				promotions_carousel.masterPages[i].appendChild(el)
+			}	
+			if( promotion_slides.length > 1 ){
+				promotions_carousel.onFlip(function () {
+					var el,
+						upcoming,
+						i;
+					for (i=0; i<3; i++) {
+						upcoming = promotions_carousel.masterPages[i].dataset.upcomingPageIndex;
+						if (upcoming != promotions_carousel.masterPages[i].dataset.pageIndex) {
+							el = promotions_carousel.masterPages[i].querySelector('span');
+							el.innerHTML = makePromotion( promotion_slides[upcoming] );
+						}
+					}
+					$( '#promotions-slidecontrols ul li' ).removeClass('active');
+					$( '#promotions-slidecontrols ul li:nth-child('+(promotions_carousel.pageIndex+1)+')' ).addClass('active');
+				});
+			}
 		}
-	} else {
+	} else if( promotion_slides.length > 1 ){
 		promotions_carousel.goToPage(0);
 	}
 	if( header_visible == false ){
