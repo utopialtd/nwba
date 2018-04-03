@@ -320,7 +320,7 @@ function actionLoadingCategories2( ){
 		var current_category_name = localStorage.getItem('category_name');
 		for(i=0;i<rs.length;i++){
 			appLog( 'cat i='+i );
-			if( current_category == null ){
+			if( current_category == null || rs[i].guid == current_category || rs[i].name == current_category_name ){
 				current_category=rs[i].guid;
 				current_category_name=rs[i].name;
 			}
@@ -337,19 +337,17 @@ function actionLoadingRegions2( ){
 	appLog( 'actionLoadingRegions2' );
 	db_select( 'SELECT * FROM region', new Array(), function(rs){
 		regions=new Array();
-//		var current_region = localStorage.getItem('region');
-//		var current_region_name = localStorage.getItem('region_name');
+		var current_region = localStorage.getItem('region');
+		var current_region_name = localStorage.getItem('region_name');
 		for(i=0;i<rs.length;i++){
-/*
-			if( current_region == null ){
+			if( current_region == null || rs[i].guid == current_region || rs[i].name == current_region_name ){
 				current_region=rs[i].guid;
 				current_region_name=rs[i].name;
 			}
-*/			
 			regions[i]=rs[i];
 		}
-//		localStorage.setItem( 'region', current_region );
-//		localStorage.setItem( 'region_name', current_region_name );
+		localStorage.setItem( 'region', current_region );
+		localStorage.setItem( 'region_name', current_region_name );
 		setTimeout( actionLoadingLogin, loading_timegap );
 	});
 }
@@ -481,7 +479,6 @@ function actionFooterCategory( i ){
 function redrawFooter( ){
 	var current_region = localStorage.getItem('region');
 	var current_region_name = localStorage.getItem('region_name');
-	if( current_region == null ) current_region_name="All";
 	html='<div id="footer-menuleft">';
 	html=html+'<a class="navlink" id="topnav_link" onClick="return internalToggleNav( \'regionnav\' )"><span>'+current_region_name+'</span><i class="fa fa-angle-up"></i></a>';
 	html=html+'<ul id="regionnav" class="nav">';
