@@ -512,9 +512,11 @@ footer {
 	#header-nav {
 		width: 55%;
 	}
+/*
 	footer {
 		height: 40px;
 	}
+*/
 	.content {
 		bottom: 40px;
 	}
@@ -526,6 +528,7 @@ footer {
 	#categorynav {
 		bottom: 40px;
 	}
+/*
 	#footer-nav navlink {
 		display: block;
 		padding: 6px;
@@ -552,6 +555,7 @@ footer {
 	#footer-menuright a.navlink span {
 		padding-left: 0.5em;
 	}
+*/
 	#map_overlay {
 		top: 60px;
 	}

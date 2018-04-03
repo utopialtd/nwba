@@ -64,6 +64,7 @@ function scrollContentToTop( id ){
 	$('#'+id+' .inner').scrollTop(0);
 }
 function openExternalLink( url ){
+	alert( url );
 	window.open(url, '_system');
 /*
 if(device.platform === 'Android') {

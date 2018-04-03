@@ -959,11 +959,11 @@ function makePromotion( promotion ){
 	if( promotion_slides.length == 1 ){
 		/* just one slide */
 		html=html+'<center>';
-		style=' style="border: 1px dashed red; width: 80%;"';
+		style=' style="margin-top: 15px; width: 80%;"';
 		if( promotion.url == none ){
 			html=html+'<img src="'+promotion.image+'"'+style+'>';
 		} else {
-			html=html+'<a href="'+promotion.url+'"><img src="'+promotion.image+'"'+style+'></a>';
+			html=html+'<a onClick="return openExternalLink(\''+promotion.url+'\')"><img src="'+promotion.image+'"'+style+'></a>';
 		}
 		html=html+'</center>';
 	} else {
@@ -971,7 +971,7 @@ function makePromotion( promotion ){
 		if( promotion.url == none ){
 			html=html+'<img src="'+promotion.image+'">';
 		} else {
-			html=html+'<a href="'+promotion.url+'"><img src="'+promotion.image+'"></a>';
+			html=html+'<a onClick="return openExternalLink(\''+promotion.url+'\')"><img src="'+promotion.image+'"></a>';
 		}
 	}
 	return html;
