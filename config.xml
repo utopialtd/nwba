@@ -3,7 +3,7 @@
     <name>North West Buy Local</name>
     <description>The North West Country Buy Local App is for all those living, working and visiting the North West Country area. In the app, you can search through the business directory which includes contact details and a map for every business, you will receive special deals from local businesses and much more. You will also get rewarded for shopping locally! Simply register yourself in the app, scan the business's unique QR code when shopping, and you'll receive points that you can redeem for entries into our monthly prize draws!</description>
     <author email="info@northwestcountry.co.nz" href="http://www.northwestcountry.co.nz">
-	<preference name="phonegap-version" value="cli-7.1.0" />	
+	<iosonly preference name="phonegap-version" value="cli-7.1.0" />	
     </author>
     <content src="index.html" />
     <icon src="img/android-icon-1.png" />
